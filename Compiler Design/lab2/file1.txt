@@ -1,0 +1,7 @@
+Hello My      name
+dfjkdfjksdfdsf jdfjksfnksdjf				dsjkbfsdjkf
+a							b				b		d
+"I am           AMan dbdsknfbnsf           snfb           dsbf"
+#include<stdio.h>
+#define pi 3.14
+Hi "i am ### sjhfbhsjfg    $##      #"

@@ -1,0 +1,14 @@
+#include <stdio.h>
+#include <stdlib.h>
+int INTnt main(MAINain()
+{
+	int INTnt a=0, b=5;
+	char CHARhar c=10;
+	printf("sbdfdsf");
+	if(IFf(a<5)
+		a++;
+	else
+ELSElse
+		b++;
+	return 0;
+}
