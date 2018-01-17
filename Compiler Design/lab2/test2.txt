@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-int INTnt main(MAINain()
+INT MAIN()
 {
-	int INTnt a=0, b=5;
-	char CHARhar c=10;
+	INT a=0, b=5;
+	CHAR c=10;
 	printf("sbdfdsf");
-	if(IFf(a<5)
+	IF(a<5)
 		a++;
-	else
-ELSElse
+	ELSE
 		b++;
-	return 0;
-}
+	RETURN 0;
+};
