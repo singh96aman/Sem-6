@@ -1,0 +1,197 @@
+//w2q1
+
+#include <mpi.h>
+#include <stdio.h>
+#include <string.h>
+
+int main(int argc, char *argv[])
+{
+	int rank, size;
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
+	if(rank==0)
+	{
+		//char arr[] = "Aman";
+		char arr[50];
+		MPI_Status status;
+		fgets(arr,10,stdin);
+		int len=strlen(arr);
+		MPI_Ssend((void*)&len, 1,MPI_INT,1,0,MPI_COMM_WORLD);
+		MPI_Ssend((void*)&arr, len , MPI_CHAR,1,1,MPI_COMM_WORLD);
+		MPI_Recv((void*)&arr, len, MPI_CHAR, 1, 2, MPI_COMM_WORLD, &status);
+		printf("%s",arr);
+	}else{
+		char arr2[50];
+		int len, i;
+		MPI_Status status;
+		MPI_Recv((void*)&len, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+		MPI_Recv((void*)&arr2, len, MPI_CHAR, 0, 1, MPI_COMM_WORLD, &status);
+		for(i=0; i<len; i++)
+			arr2[i]++;
+		MPI_Ssend((void*)&arr2, len , MPI_CHAR,0,2,MPI_COMM_WORLD);
+	}
+	MPI_Finalize();
+	return 0;
+}
+
+//w2q2
+
+#include <mpi.h>
+#include <stdio.h>
+#include <string.h>
+
+int main(int argc, char *argv[])
+{
+	int rank, size;
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
+	if(rank==0)
+	{
+		int n, i;
+		//MPI_Status status;
+		scanf("%d",&n);
+		for(i=1; i<size; i++)
+			MPI_Send((void*)&n, 1,MPI_INT,i,i,MPI_COMM_WORLD);
+	}else
+	{
+		int n;
+		MPI_Status status;
+		MPI_Recv((void*)&n, 1, MPI_INT, 0, rank, MPI_COMM_WORLD, &status);
+		printf("%d",n);
+	}
+	return 0;
+}
+
+//w2q3
+
+#include <mpi.h>
+#include <stdio.h>
+#include <string.h>
+
+int main(int argc, char *argv[])
+{
+	int rank, size;
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
+	if(rank==0)
+	{
+		int n, i;
+		MPI_Status status;
+		scanf("%d",&n);
+		int arr[50];
+		for(i=0; i<n; i++)
+			scanf("%d",&arr[i]);
+		MPI_Send((void*)&n, 1,MPI_INT,1,0,MPI_COMM_WORLD);
+		for(i=0; i<n/2; i++)
+			MPI_Send((void*)&arr[i], 1,MPI_INT,1,1,MPI_COMM_WORLD);
+		int sum=0;
+		double t1, t2;
+		t1 = MPI_Wtime();
+		for(i=(n/2); i<n; i++)
+			sum+=arr[i];
+		t2 = MPI_Wtime();
+		printf("\n %d sum and time %lf ",sum,t2-t1);
+		MPI_Recv((void*)&n, 1, MPI_INT, 1, 2, MPI_COMM_WORLD, &status);
+		printf("\n  Sum is : %d",sum+n);
+	}else{
+		int i, n;
+		int sum=0;
+		int arr[100];
+		double t1, t2;
+		MPI_Status status;
+		MPI_Recv((void*)&n, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+		for(i=0; i<n/2; i++)
+			MPI_Recv((void*)&arr[i], 1, MPI_INT, 0, 1, MPI_COMM_WORLD, &status);
+		t1 = MPI_Wtime();
+		for(i=0; i<n/2; i++)
+			sum+=arr[i];
+		t2 = MPI_Wtime();
+		printf("\n %d sum and time %lf ",sum,t2-t1);
+		MPI_Ssend((void*)&sum, 1,MPI_INT,0,2,MPI_COMM_WORLD);
+	}
+	return 0;
+}
+
+
+//w2q4
+
+#include <mpi.h>
+#include <stdio.h>
+#include <string.h>
+
+int main(int argc, char *argv[])
+{
+	int rank, size;
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
+	if(rank==0)
+	{
+		int n, i;
+		//MPI_Status status;
+		scanf("%d",&n);
+		int arr[50];
+		int buffer[100];
+		MPI_Buffer_attach(buffer,100);
+		for(i=0; i<n; i++)
+			scanf("%d",&arr[i]);
+		MPI_Send((void*)&n, 1,MPI_INT,1,0,MPI_COMM_WORLD);
+		for(i=1; i<n; i++)
+			MPI_Bsend(&arr[i], 1,MPI_INT,i,i,MPI_COMM_WORLD);
+		printf("\nRank %d computes %d as : %d",rank,arr[0],arr[0]*arr[0]);
+		MPI_Buffer_detach(buffer,100);
+	}else{
+		int n;
+		MPI_Status status;
+		MPI_Recv((void*)&n, 1, MPI_INT, 0, rank, MPI_COMM_WORLD, &status);
+		if(rank%2==0)
+			printf("\nRank %d computes %d as : %d",rank,n,n*n);
+		else
+			printf("\nRank %d computes %d as : %d",rank,n,n*n*n);
+	}
+	return 0;
+}
+
+
+//w2q5
+
+#include <mpi.h>
+#include <stdio.h>
+#include <string.h>
+
+int main(int argc, char *argv[])
+{
+	int rank, size;
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
+	if(rank==0)
+	{
+		int n, i;
+		MPI_Status status;
+		scanf("%d",&n);
+		printf("\n Rank %d n = %d",rank,n);
+		n++;
+		MPI_Ssend((void*)&n, 1,MPI_INT,1,1,MPI_COMM_WORLD);
+		MPI_Recv((void*)&n, 1, MPI_INT, size-1, 1, MPI_COMM_WORLD, &status);
+		printf("\n Rank %d n = %d",rank,n);
+	}
+	else
+	{
+		int n;
+		MPI_Status status;
+		MPI_Recv((void*)&n, 1, MPI_INT, rank-1, 1, MPI_COMM_WORLD, &status);
+		printf("\n Rank %d n = %d",rank,n);
+		n++;
+		if(rank==size-1)
+			MPI_Ssend((void*)&n, 1,MPI_INT,0,1,MPI_COMM_WORLD);
+		else
+			MPI_Ssend((void*)&n, 1,MPI_INT,rank+1,1,MPI_COMM_WORLD);
+	}
+	return 0;
+}
+
+
