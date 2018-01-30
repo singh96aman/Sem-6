@@ -1,16 +1,16 @@
 %{
 	int vowels=0;
-	int total=0;
+	int consonants=0;
 %}
 %%
 ['a','e','i','o','u','A','E','I','O','U'] vowels++;
-[A-Za-z] total++;
+[A-Za-z] consonants++;
 %%
 int main()
 {
 	yylex();
 	printf("\nThere were %d vowels\n",vowels);
-	printf("\nThere were %d Consonants\n",total);
+	printf("\nThere were %d Consonants\n",consonants);
 	return 0;
 }
 

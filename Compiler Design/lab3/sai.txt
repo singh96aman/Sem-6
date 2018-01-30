@@ -1,0 +1,5 @@
+int abc;
+char lalla;
+printf("asfkasbdf")
+a+b=c
+a=45;

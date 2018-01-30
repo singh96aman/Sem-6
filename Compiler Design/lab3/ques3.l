@@ -1,23 +1,21 @@
 %{
-	int positive=0;
-	int negative=0;
-	int posfloat=0;
-	int negfloat=0;
+int pos=0;
+int neg=0;
+int posf=0;
+int negf=0;
 %}
 %%
-[+]?[0-9]* positive++;
-[-]+[0-9]* negative++;
-[+]?[0-9]*\.[0-9]* posfloat++;
-[-]+[0-9]*\.[0-9]* negfloat++;
+[+]?[0-9]* pos++;
+[-]+[0-9]* neg++;
+[+]?[0-9]*.[0-9]* posf++;
+[-]+[0-9]*.[0-9]* negf++;
 %%
 int main()
 {
 	yylex();
-	printf("\nPositives : %d\nNegative : %d\nPositive float : %d\nNegative float : %d\n",positive,negative,posfloat,negfloat);
+	printf("\n Pos Float : %d\n Neg Float : %d\n Pos : %d\n Neg : %d",posf,negf,pos,neg);
 	return 0;
 }
-
 int yywrap(){
 	return 1;
 }
-

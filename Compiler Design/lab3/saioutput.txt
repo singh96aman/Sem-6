@@ -1,0 +1,27 @@
+
+ Lexeme = int, TokenType=Keyword
+ 
+ Lexeme = abc, TokenType=Identifier
+;
+
+ Lexeme = char, TokenType=Keyword
+ 
+ Lexeme = lalla, TokenType=Identifier
+;
+
+ Lexeme = printf,TokenType=ReservedWord
+("
+ Lexeme = asfkasbdf, TokenType=Identifier
+")
+
+ Lexeme = a, TokenType=Identifier
+
+ Lexeme = +, TokenType=Operator
+
+ Lexeme = b, TokenType=Identifier
+=
+ Lexeme = c, TokenType=Identifier
+
+
+ Lexeme = a, TokenType=Identifier
+=45;
