@@ -11,18 +11,26 @@
 int main()
 {
 	int i,n;
-	printf("Enter value of N:");
-	scanf("%d",&n);
-	n++;
-	char a[n];
-	for(i=0;i<n;i++) scanf("%c",&a[i]);
+	printf("Enter String :");
+	char a[1000];
+	scanf("%s",a);
 	printf("\n %s",a);
+	int len[100], index=0;
+
+	for(i=0; a[i]!='\0'; i++)
+	{
+		len[index]=0;
+		if(a[i]==' ')
+			index++;
+		else
+			len[index]++;
+	}
 
 	FILE *fp;
 	char *source_str;
 	size_t source_size;
 
-	fp = fopen("kernel.cl","r");
+	fp = fopen("kernel3.cl","r");
 
 	if(!fp)
 	{
@@ -50,8 +58,12 @@ int main()
 
 	cl_mem a_mem_obj = clCreateBuffer(context,CL_MEM_READ_ONLY,n*sizeof(char),NULL,&ret);
 	cl_mem b_mem_obj = clCreateBuffer(context,CL_MEM_WRITE_ONLY,n*sizeof(char),NULL,&ret);
+	cl_mem c_mem_obj = clCreateBuffer(context,CL_MEM_WRITE_ONLY,index*sizeof(int),NULL,&ret);
+
 
 	ret = clEnqueueWriteBuffer(queue,a_mem_obj,CL_TRUE,0,n*sizeof(char),a,0,NULL,NULL);
+	ret = clEnqueueWriteBuffer(queue,c_mem_obj,CL_TRUE,0,index*sizeof(int),len,0,NULL,NULL);
+
 
 	cl_program program = clCreateProgramWithSource(context,1,(const char**)&source_str,(const size_t *)&source_size,&ret);
 
@@ -60,20 +72,17 @@ int main()
 	cl_kernel kernel = clCreateKernel(program,"octal",&ret);
 
 	ret = clSetKernelArg(kernel,0,sizeof(cl_mem),(void *)&a_mem_obj);
-	ret = clSetKernelArg(kernel,1,sizeof(cl_mem),(void *)&b_mem_obj);
+	ret = clSetKernelArg(kernel,1,sizeof(cl_mem),(void *)&c_mem_obj);
 
-	size_t global_item_size = n+1;
+	size_t global_item_size = index;
 	size_t local_item_size = 1;
 
 	cl_event event;
 	ret = clEnqueueNDRangeKernel(queue,kernel,1,NULL,&global_item_size,&local_item_size,0,NULL,NULL);
-
 	ret = clFinish(queue);
+	ret = clEnqueueReadBuffer(queue,a_mem_obj,CL_TRUE,0,n*sizeof(char),a,0,NULL,NULL);
 
-	char b[n];
-	ret = clEnqueueReadBuffer(queue,b_mem_obj,CL_TRUE,0,n*sizeof(char),b,0,NULL,NULL);
-
-	printf("%s ",b);
+	printf("\n%s ",a);
 
 	clFlush(queue);
 	clReleaseKernel(kernel);
