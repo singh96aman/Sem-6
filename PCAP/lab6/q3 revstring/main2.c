@@ -12,10 +12,10 @@ int main()
 {
 	int i,n;
 	printf("Enter value of N:");
-	scanf("%d",&n);
-	char a[1000];
-	scanf("%s",a);
-	printf("\n %s",a);
+	scanf("%d ",&n);
+	char a[n];
+	fgets(a,10,stdin);
+	//printf("\n %s",a);
 
 	FILE *fp;
 	char *source_str;

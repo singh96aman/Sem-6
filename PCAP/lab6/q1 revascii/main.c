@@ -5,18 +5,18 @@
 #endif
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MAX_SOURCE_SIZE 100000
 
 int main()
 {
 	int i,n;
-	printf("Enter value of N:");
+	printf("\nEnter N : ");
 	scanf("%d",&n);
-	n++;
 	char a[n];
-	for(i=0;i<n;i++) scanf("%c",&a[i]);
-	printf("\n %s",a);
+	char b[n];
+	scanf("%s",a);
 
 	FILE *fp;
 	char *source_str;
@@ -62,7 +62,7 @@ int main()
 	ret = clSetKernelArg(kernel,0,sizeof(cl_mem),(void *)&a_mem_obj);
 	ret = clSetKernelArg(kernel,1,sizeof(cl_mem),(void *)&b_mem_obj);
 
-	size_t global_item_size = n+1;
+	size_t global_item_size = n;
 	size_t local_item_size = 1;
 
 	cl_event event;
@@ -70,10 +70,9 @@ int main()
 
 	ret = clFinish(queue);
 
-	char b[n];
 	ret = clEnqueueReadBuffer(queue,b_mem_obj,CL_TRUE,0,n*sizeof(char),b,0,NULL,NULL);
-
-	printf("%s ",b);
+	b[n]='\0';
+	printf("%s\n",b);
 
 	clFlush(queue);
 	clReleaseKernel(kernel);
