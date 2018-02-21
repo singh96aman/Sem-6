@@ -47,8 +47,7 @@ int main()
 	cl_command_queue queue = clCreateCommandQueue(context,did,NULL,&ret);
 
 	cl_mem a_mem_obj = clCreateBuffer(context,CL_MEM_READ_ONLY,n*sizeof(int),NULL,&ret);
-	cl_mem b_mem_obj = clCreateBuffer(context,CL_MEM_WRITE_ONLY,n*sizeof(int),NULL,&ret);
-
+	
 	ret = clEnqueueWriteBuffer(queue,a_mem_obj,CL_TRUE,0,n*sizeof(int),a,0,NULL,NULL);
 
 	cl_program program = clCreateProgramWithSource(context,1,(const char**)&source_str,(const size_t *)&source_size,&ret);
@@ -58,9 +57,8 @@ int main()
 	cl_kernel kernel = clCreateKernel(program,"octal",&ret);
 
 	ret = clSetKernelArg(kernel,0,sizeof(cl_mem),(void *)&a_mem_obj);
-	ret = clSetKernelArg(kernel,1,sizeof(cl_mem),(void *)&b_mem_obj);
 
-	size_t global_item_size = n/2+1;
+	size_t global_item_size = n/2;
 	size_t local_item_size = 1;
 
 	cl_event event;
@@ -68,17 +66,15 @@ int main()
 
 	ret = clFinish(queue);
 
-	int b[n];
-	ret = clEnqueueReadBuffer(queue,b_mem_obj,CL_TRUE,0,n*sizeof(int),b,0,NULL,NULL);
+	ret = clEnqueueReadBuffer(queue,a_mem_obj,CL_TRUE,0,n*sizeof(int),a,0,NULL,NULL);
 
 	printf("\n");
-	for(i=0;i<n;i++) printf("%d ",b[i]);
+	for(i=0;i<n;i++) printf("%d ",a[i]);
 
 	clFlush(queue);
 	clReleaseKernel(kernel);
 	clReleaseProgram(program);
 	clReleaseMemObject(a_mem_obj);
-	clReleaseMemObject(b_mem_obj);
 	clReleaseCommandQueue(queue);
 	clReleaseContext(context);
 

@@ -14,6 +14,7 @@ int main()
 	printf("Enter value of N:");
 	scanf("%d",&n);
 	int temp[n][8];
+
 	for(i=0; i<n; i++)
 		for(j=0; j<8; j++)
 			scanf("%d",&temp[i][j]);
