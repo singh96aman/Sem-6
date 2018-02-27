@@ -12,11 +12,12 @@ int main()
 {
 	int i,n;
 	printf("Enter value of N:");
-	scanf("%d",&n);
-	n++;
-	char a[n];
-	for(i=0;i<n;i++) scanf("%c",&a[i]);
-	printf("\n %s",a);
+	scanf("%d ",&n);
+	char a[100];
+	scanf("%s",a);
+	int len = strlen(a);
+	char b[len*n];
+	//printf("\n %d",len);
 
 	FILE *fp;
 	char *source_str;
@@ -48,32 +49,35 @@ int main()
 
 	cl_command_queue queue = clCreateCommandQueue(context,did,NULL,&ret);
 
-	cl_mem a_mem_obj = clCreateBuffer(context,CL_MEM_READ_ONLY,n*sizeof(char),NULL,&ret);
-	cl_mem b_mem_obj = clCreateBuffer(context,CL_MEM_WRITE_ONLY,n*sizeof(char),NULL,&ret);
+	cl_mem a_mem_obj = clCreateBuffer(context,CL_MEM_READ_ONLY,len*sizeof(char),NULL,&ret);
+	cl_mem b_mem_obj = clCreateBuffer(context,CL_MEM_WRITE_ONLY,len*n*sizeof(char),NULL,&ret);
+	cl_mem c_mem_obj = clCreateBuffer(context,CL_MEM_WRITE_ONLY,sizeof(int),NULL,&ret);
 
-	ret = clEnqueueWriteBuffer(queue,a_mem_obj,CL_TRUE,0,n*sizeof(char),a,0,NULL,NULL);
+
+	ret = clEnqueueWriteBuffer(queue,a_mem_obj,CL_TRUE,0,len*sizeof(char),a,0,NULL,NULL);
+	ret = clEnqueueWriteBuffer(queue,c_mem_obj,CL_TRUE,0,sizeof(int),&len,0,NULL,NULL);
+
 
 	cl_program program = clCreateProgramWithSource(context,1,(const char**)&source_str,(const size_t *)&source_size,&ret);
 
 	ret = clBuildProgram(program,1,&did,NULL,NULL,NULL);
 
-	cl_kernel kernel = clCreateKernel(program,"octal",&ret);
+	cl_kernel kernel = clCreateKernel(program,"revstring",&ret);
 
 	ret = clSetKernelArg(kernel,0,sizeof(cl_mem),(void *)&a_mem_obj);
-	ret = clSetKernelArg(kernel,1,sizeof(cl_mem),(void *)&b_mem_obj);
+	ret = clSetKernelArg(kernel,1,sizeof(cl_mem),(void *)&c_mem_obj);
+	ret = clSetKernelArg(kernel,2,sizeof(cl_mem),(void *)&b_mem_obj);
 
-	size_t global_item_size = n+1;
+
+	size_t global_item_size = len;
 	size_t local_item_size = 1;
 
 	cl_event event;
 	ret = clEnqueueNDRangeKernel(queue,kernel,1,NULL,&global_item_size,&local_item_size,0,NULL,NULL);
-
 	ret = clFinish(queue);
-
-	char b[n];
-	ret = clEnqueueReadBuffer(queue,b_mem_obj,CL_TRUE,0,n*sizeof(char),b,0,NULL,NULL);
-
-	printf("%s ",b);
+	ret = clEnqueueReadBuffer(queue,b_mem_obj,CL_TRUE,0,len*n*sizeof(char),b,0,NULL,NULL);
+	b[len*n]='\0';
+	printf("\n%s ",b);
 
 	clFlush(queue);
 	clReleaseKernel(kernel);

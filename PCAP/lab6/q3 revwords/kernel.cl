@@ -7,9 +7,7 @@ __kernel void revstring(__global char *a,__global int *l,__global char *b)
 	for(j=0; j<id; j++)
 		sum+=l[j]+1;
 	len = l[j];
-	//printf("\n %d",len);
 	for(k=0; k<len; k++)
 		b[sum+len-k-1] = a[sum+k];
-	//sum=0;
 	
 	b[sum+len]=' ';
