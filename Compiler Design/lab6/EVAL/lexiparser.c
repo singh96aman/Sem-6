@@ -6,8 +6,8 @@
 char datatype[20][20] = {"int","char","float","double","long"};
 int noofdatatype=5;
 int sizeofdatatype[] = {4,1,4,8,8};
-char keywords[40][20] = {"int","char","float","double","long","if","else","void","return","include","do","while","for","stdio","string","ctype","stdlib","NULL","FILE","switch","case","printf"};
-int noofkeywords = 22;
+char keywords[40][40] = {"break","int","char","float","double","long","if","else","void","return","include","do","while","for","stdio","string","ctype","stdlib","NULL","FILE","switch","case","printf"};
+int noofkeywords = 23;
 char specialop[20][20] = {"==",">=","<=","!=","&&","||","++","--","+=","-=","*=","/=","%=","<<",">>"};
 int noofspecialop=15;
 char data[100][100]; //Contains only lexemes
@@ -15,8 +15,6 @@ int dataindex=0;
 
 char symbols[20][20];
 int symindex=0;
-char func[20][20];
-int funcindex=0;
 int num[20];
 int numindex=0;
 
@@ -155,7 +153,7 @@ int main()
 				buf[i++]=c;
 				c=getc(fp1);
 			}
-			buf[i]='\0';
+			buf[i]='\0';	
 			//printf("\n%s",buf);
 			//Check for keywords
 			int index=checkkeywords(buf);
@@ -192,15 +190,20 @@ int main()
 			c=fgetc(fp1);
 			i=0;
 		}
+		fflush(stdout);
 	}
+	//for(int k=0; k<symindex; k++)
+	//	printf("\n%s",symbols[k]);
 	// Symbol table addition
 	for(i=0; i<symindex; i++){
 		for(int k=0; k<dataindex; k++){
 			if(strcmp(symbols[i],data[k])==0){
 				strcpy(table[symboltableindex].name,symbols[i]);
 				strcpy(table[symboltableindex].type,data[k-1]);
-				if(data[k+1][0]=='(')
+				if(data[k+1][0]=='('){
+					//printf("\n%s %s\n",data[k],data[k+1);
 					strcpy(table[symboltableindex].type,"FUNC");
+				}
 				int index = checkdataype(data[k-1]);
 				if(data[k+1][0]=='['){
 					int n = atoi(data[k+2]);
@@ -228,4 +231,5 @@ int main()
 	for(i=0; i<symboltableindex; i++)
 		printf("\n%10s %10s %10d %10c",table[i].name,table[i].type,table[i].size, table[i].Scope);
 	printf("\n");
+	
 }
