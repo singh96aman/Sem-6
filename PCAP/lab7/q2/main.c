@@ -8,8 +8,8 @@
 #include <string.h>
 
 #define MAX_SOURCE_SIZE 100000
-#define WA 4
-#define HA 4
+#define WA 3
+#define HA 3
 #define BLOCK_SIZE 1
 
 int main()

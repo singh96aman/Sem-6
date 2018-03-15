@@ -2,7 +2,7 @@ __kernel void mat_mul(__global int *a, int widthA, int heightA)
 {
 	int row = get_global_id(1);
 	int col = get_global_id(0);
-	if(row!=0 && row!=(widthA-1) && col!=0 && col!=(heightA-1)){
+	if(row!=0 && row!=(heightA-1) && col!=0 && col!=(widthA-1)){
 		int temp = a[row*widthA+col];
 		int i, j, arr[100], index=0;
 		while(temp!=0){
