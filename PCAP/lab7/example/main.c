@@ -91,7 +91,7 @@ int main()
 
 	cl_event event;
 	//printf("\n aman");
-	ret = clEnqueueNDRangeKernel(queue,kernel,2,NULL,&global_item_size,&local_item_size,0,NULL,NULL);
+	ret = clEnqueueNDRangeKernel(queue,kernel,2,NULL,global_item_size,local_item_size,0,NULL,NULL);
 
 	ret = clFinish(queue);
 

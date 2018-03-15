@@ -11,3 +11,4 @@ __kernel void revstring(__global char *a,__global int *l,__global char *b)
 		b[sum+len-k-1] = a[sum+k];
 	
 	b[sum+len]=' ';
+}
