@@ -92,7 +92,6 @@ int main(){
 	buf2="start";
 	Program(fp1);
 	buf2 = getNextToken(fp1);
-	//printf("\nLast %s",buf2);
 	if(strcmp(buf2,"end")==0)
 		printf("\nAccepted\n");
 	else
@@ -103,15 +102,3 @@ void printError(){
 	printf("\nSyntax Error at %s",buf);
 	exit(0);
 }
-
-
-/*
-int main2(){
-	dataindex=generate();
-	Program();		
-	i++;
-	//printf("\n%d %d",dataindex, i);
-	if(dataindex==i)
-		printf("\n\nAccepted");
-}
-*/

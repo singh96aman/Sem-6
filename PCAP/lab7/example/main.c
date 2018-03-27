@@ -83,8 +83,8 @@ int main()
 	ret = clSetKernelArg(kernel,0,sizeof(cl_mem),(void *)&a_mem_obj);
 	ret = clSetKernelArg(kernel,1,sizeof(cl_mem),(void *)&b_mem_obj);
 	ret = clSetKernelArg(kernel,2,sizeof(cl_mem),(void *)&c_mem_obj);
-	ret = clSetKernelArg(kernel,3,sizeof(cl_mem),(void *)&widthA);
-	ret = clSetKernelArg(kernel,4,sizeof(cl_mem),(void *)&widthB);
+	ret = clSetKernelArg(kernel,3,sizeof(int),&widthA);
+	ret = clSetKernelArg(kernel,4,sizeof(int),&widthB);
 
 	size_t global_item_size[2] = {HC,WC};
 	size_t local_item_size[2] = {BLOCK_SIZE,BLOCK_SIZE};

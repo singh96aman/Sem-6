@@ -1,0 +1,10 @@
+main()
+{
+int a, b;
+char k,l;
+int a, k, c[50], k[90];
+char g[100];
+a=b*c/d+f-k;
+b=c>l;
+c=k*i+p;
+}

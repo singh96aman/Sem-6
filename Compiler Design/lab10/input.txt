@@ -1,0 +1,31 @@
+main()
+{
+int a, b;
+char k,l;
+int a, k, c[50], k[90];
+char g[100];
+a=b*c/d+f-k+g+l+h;
+a=b>c;
+if(a<b){
+	c=a>l;
+}
+a=b*c/d+f-k;
+a=b>c;
+if(a==b){
+	c=a+l;
+}
+while(a<b)
+{
+	c=c*d;
+	a=a+b;
+}
+for(a=b; a<c; a=a+f)
+{
+a=b*c/d+f-k;
+}
+while(a<b)
+{
+	c=c*d;
+	a=a+b;
+}
+}

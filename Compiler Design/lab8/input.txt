@@ -2,5 +2,5 @@ main()
 {
 int a, b;
 char c, d;
-a=e;
+a=c;
 }
