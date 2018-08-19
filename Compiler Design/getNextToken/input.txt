@@ -1,0 +1,11 @@
+struct point
+{
+   int x, y;
+}; 
+ 
+int main()
+{
+// A valid initialization. member x gets value 0 and y
+// gets value 1.  The order of declaration is followed.
+   struct point p1 = {0, 1}; 
+}

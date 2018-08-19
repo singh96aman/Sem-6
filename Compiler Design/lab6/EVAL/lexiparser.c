@@ -108,6 +108,17 @@ int main()
 	int i=0; //counter
 	while(c!=EOF){
 
+		//Skip Comments
+		if(c=='/'){
+			c=fgetc(fp1);
+			if(c=='/'){
+				c=fgetc(fp1);
+				while(c!='\n')
+					c=fgetc(fp1);
+			}
+			fputc('\n',fp1);
+		}
+
 		// Skip text
 		if(c==' ' || c=='\t'){
 			while(c==' ' || c=='\t')

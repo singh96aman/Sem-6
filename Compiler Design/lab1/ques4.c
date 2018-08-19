@@ -11,6 +11,6 @@ int main()
 		printf("\n Cannot open file");
 	fseek(fptr,0,SEEK_END);
 	long n = ftell(fptr);
-	printf("\n File Size is %d",n);
+	printf("\n File Size is %ld",n);
 	return 0;
 }

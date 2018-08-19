@@ -2,12 +2,12 @@
 #include <stdlib.h>
 int main()
 {
-	int a=0, b=5;
-	char c=10;
-	printf("sbdfdsf");
-	if(a<5)
-		a++;
-	else
-		b++;
-	return 0;
-}
+		int a=0, b=5;
+		char c=10;
+		printf("sbdfdsf");
+		if(a<5)
+					a++;
+		else
+							b++;
+		     return 0;
+		}

@@ -1,13 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
+
+
 INT MAIN()
 {
 	INT a=0, b=5;
 	CHAR c=10;
-	printf("sbdfdsf");
+	PRINTF("sbdfdsf");
 	IF(a<5)
-		a++;
+	a++;
 	ELSE
-		b++;
-	RETURN 0;
-};
+	b++;
+	 RETURN 0;
+	}

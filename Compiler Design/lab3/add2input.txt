@@ -1,0 +1,6 @@
+int abc;
+char lalla;
+printf("asfkasbdf")
+a+b=c
+// a has been a very bad variable
+a=45;

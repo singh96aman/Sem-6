@@ -1,0 +1,645 @@
+q1a
+
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+
+#include <stdio.h>
+
+__global__ void add (int *A, int *B, int *C) {
+	int idx = blockIdx.x;
+    printf("idx = %d\n", idx);
+    C[idx] = A[idx] + B[idx];
+}
+
+int main2 () {
+
+	int M;
+	printf("\nEnter The Value Of N : ");
+	scanf("%d",&M);
+    // Host copies of the variables
+    int A[M], B[M], C[M];
+
+    int i, j;
+    for(i=0; i<M; i++)
+    	scanf("%d",&A[i]);
+    for(j=0; j<M; j++)
+    	scanf("%d",&B[j]);
+
+    // Device copies of the variables
+    int *d_a, *d_b, *d_c;
+
+    int size = sizeof(int) * M;
+
+    // Allocate memories to device copies of the objects
+    cudaMalloc((void**)&d_a, size);
+    cudaMalloc((void**)&d_b, size);
+    cudaMalloc((void**)&d_c, size);
+
+    // Copy inputs to device
+    cudaMemcpy(d_a, &A, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_b, &B, size, cudaMemcpyHostToDevice);
+
+    // Launch kernel onto the device
+    add<<<M, 1>>>(d_a, d_b, d_c);
+
+    // Copy the result back to the host
+    cudaMemcpy(&C, d_c, size, cudaMemcpyDeviceToHost);
+
+    // Outpoooot it
+    printf("A:\n");
+    for (j = 0; j < M; ++j) {
+        printf("%d\t", A[j]);
+    }
+    printf("\n");
+
+    printf("B:\n");
+    for (j = 0; j < M; ++j) {
+        printf("%d\t", B[j]);
+    }
+    printf("\n");
+
+    printf("A + B:\n");
+    for (j = 0; j < M; ++j) {
+        printf("%d\t", C[j]);
+    }
+    printf("\n");
+
+    cudaFree(d_a);
+    cudaFree(d_b);
+    cudaFree(d_c);
+
+	getchar();
+
+    return 0;
+}
+
+q1b
+
+
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+
+#include <stdio.h>
+
+__global__ void add2 (int *A, int *B, int *C) {
+    int id = threadIdx.x;
+    printf("%d = %d \n", id,A[id]);
+    C[id] = A[id] + B[id];
+}
+
+int main22 () {
+
+    int M;
+    printf("\nEnter The Value Of N : ");
+    scanf("%d",&M);
+    // Host copies of the variables
+    int A[M], B[M], C[M];
+
+    int i, j;
+    for(i=0; i<M; i++)
+        scanf("%d",&A[i]);
+    for(j=0; j<M; j++)
+        scanf("%d",&B[j]);
+
+    // Device copies of the variables
+    int *d_a, *d_b, *d_c;
+
+    int size = sizeof(int) * M;
+
+    // Allocate memories to device copies of the objects
+    cudaMalloc((void**)&d_a, size);
+    cudaMalloc((void**)&d_b, size);
+    cudaMalloc((void**)&d_c, size);
+
+    // Copy inputs to device
+    cudaMemcpy(d_a, &A, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_b, &B, size, cudaMemcpyHostToDevice);
+
+    // Launch kernel onto the device
+    add2<<<1, M>>>(d_a, d_b, d_c);
+
+    // Copy the result back to the host
+    cudaMemcpy(&C, d_c, size, cudaMemcpyDeviceToHost);
+
+    // Outpoooot it
+    printf("A:\n");
+    for (j = 0; j < M; ++j) {
+        printf("%d\t", A[j]);
+    }
+    printf("\n");
+
+    printf("B:\n");
+    for (j = 0; j < M; ++j) {
+        printf("%d\t", B[j]);
+    }
+    printf("\n");
+
+    printf("A + B:\n");
+    for (j = 0; j < M; ++j) {
+        printf("%d\t", C[j]);
+    }
+    printf("\n");
+
+    cudaFree(d_a);
+    cudaFree(d_b);
+    cudaFree(d_c);
+
+    getchar();
+
+    return 0;
+}
+
+q2
+
+
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+
+#include <stdio.h>
+
+__global__ void add3 (int *A, int *B, int *C, int row, int col) {
+    int i, idx = blockIdx.x;
+    int index = idx*col;
+    for(i=index; i<(index+col); i++)
+        C[i] = A[i] + B[i];
+}
+
+int main34 () {
+
+    int N, M;
+    printf("\nEnter The Value Of N and M: ");
+    scanf("%d %d",&N,&M); //row
+
+    int row=N, col=M;
+
+    int sizeMatrix=N*M;
+    // Host copies of the variables
+    int A[sizeMatrix], B[sizeMatrix], C[sizeMatrix];
+
+    int i, j;
+    for(i=0; i<sizeMatrix; i++)
+        scanf("%d",&A[i]);
+    for(j=0; j<sizeMatrix; j++)
+        scanf("%d",&B[j]);
+
+    // Device copies of the variables
+    int *d_a, *d_b, *d_c;
+
+    int size = sizeof(int) * sizeMatrix;
+
+    // Allocate Memories to device copies of the objects
+    cudaMalloc((void**)&d_a, size);
+    cudaMalloc((void**)&d_b, size);
+    cudaMalloc((void**)&d_c, size);
+
+    // Copy inputs to device
+    cudaMemcpy(d_a, &A, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_b, &B, size, cudaMemcpyHostToDevice);
+
+    // Launch kernel onto the device
+    add3<<<row, 1>>>(d_a, d_b, d_c,row,col);
+
+    // Copy the result back to the host
+    cudaMemcpy(&C, d_c, size, cudaMemcpyDeviceToHost);
+
+    printf("A:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", A[j]);
+    }
+    printf("\n");
+
+    printf("B:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", B[j]);
+    }
+    printf("\n");
+
+    printf("A + B:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", C[j]);
+    }
+    printf("\n");
+
+    cudaFree(d_a);
+    cudaFree(d_b);
+    cudaFree(d_c);
+
+    getchar();
+
+    return 0;
+}
+
+q2b
+
+
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+
+#include <stdio.h>
+
+__global__ void add4 (int *A, int *B, int *C, int row, int col) {
+    int i, j, idx = blockIdx.x;
+    for(i=idx, j=0; j<row; i+=col, j++)
+        C[i] = A[i] + B[i];
+}
+
+int main56 () {
+
+    int N, M;
+    printf("\nEnter The Value Of N and M: ");
+    scanf("%d %d",&N,&M); //row
+
+    int row=N, col=M;
+
+    int sizeMatrix=N*M;
+    // Host copies of the variables
+    int A[sizeMatrix], B[sizeMatrix], C[sizeMatrix];
+
+    int i, j;
+    for(i=0; i<sizeMatrix; i++)
+        scanf("%d",&A[i]);
+    for(j=0; j<sizeMatrix; j++)
+        scanf("%d",&B[j]);
+
+    // Device copies of the variables
+    int *d_a, *d_b, *d_c;
+
+    int size = sizeof(int) * sizeMatrix;
+
+    // Allocate Memories to device copies of the objects
+    cudaMalloc((void**)&d_a, size);
+    cudaMalloc((void**)&d_b, size);
+    cudaMalloc((void**)&d_c, size);
+
+    // Copy inputs to device
+    cudaMemcpy(d_a, &A, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_b, &B, size, cudaMemcpyHostToDevice);
+
+    // Launch kernel onto the device
+    add4<<<row, 1>>>(d_a, d_b, d_c,row,col);
+
+    // Copy the result back to the host
+    cudaMemcpy(&C, d_c, size, cudaMemcpyDeviceToHost);
+
+    printf("A:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", A[j]);
+    }
+    printf("\n");
+
+    printf("B:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", B[j]);
+    }
+    printf("\n");
+
+    printf("A + B:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", C[j]);
+    }
+    printf("\n");
+
+    cudaFree(d_a);
+    cudaFree(d_b);
+    cudaFree(d_c);
+
+    getchar();
+
+    return 0;
+}
+
+q2c
+
+
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+
+#include <stdio.h>
+
+__global__ void add5 (int *A, int *B, int *C, int row, int col) {
+    int idx = blockIdx.x;
+    int idy = threadIdx.x;
+    C[idx*row+idy] = A[idx*row+idy]+B[idx*row+idy];
+}
+
+int main23434 () {
+
+    int N, M;
+    printf("\nEnter The Value Of N and M: ");
+    scanf("%d %d",&N,&M); //row
+
+    int row=N, col=M;
+
+    int sizeMatrix=N*M;
+    // Host copies of the variables
+    int A[sizeMatrix], B[sizeMatrix], C[sizeMatrix];
+
+    int i, j;
+    for(i=0; i<sizeMatrix; i++)
+        scanf("%d",&A[i]);
+    for(j=0; j<sizeMatrix; j++)
+        scanf("%d",&B[j]);
+
+    // Device copies of the variables
+    int *d_a, *d_b, *d_c;
+
+    int size = sizeof(int) * sizeMatrix;
+
+    // Allocate Memories to device copies of the objects
+    cudaMalloc((void**)&d_a, size);
+    cudaMalloc((void**)&d_b, size);
+    cudaMalloc((void**)&d_c, size);
+
+    // Copy inputs to device
+    cudaMemcpy(d_a, &A, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_b, &B, size, cudaMemcpyHostToDevice);
+
+    // Launch kernel onto the device
+    add5<<<row, col>>>(d_a, d_b, d_c,row,col);
+
+    // Copy the result back to the host
+    cudaMemcpy(&C, d_c, size, cudaMemcpyDeviceToHost);
+
+    printf("A:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", A[j]);
+    }
+    printf("\n");
+
+    printf("B:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", B[j]);
+    }
+    printf("\n");
+
+    printf("A + B:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", C[j]);
+    }
+    printf("\n");
+
+    cudaFree(d_a);
+    cudaFree(d_b);
+    cudaFree(d_c);
+
+    getchar();
+
+    return 0;
+}
+
+q3
+
+
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+
+#include <stdio.h>
+
+__global__ void mul1 (int *A, int *B, int *C, int height, int width) {
+    int idx = blockIdx.x;
+    int sum=0;
+    for(int i=0; i<width; i++){
+        sum=0;
+        for(int j=0; j<width; j++)
+            sum+=A[idx*width+j]*B[j*width+i];
+        C[idx*width+i]=sum;
+    }
+}
+
+int main789 () {
+
+    int N, M;
+    printf("\nEnter The Value Of N and M: ");
+    scanf("%d %d",&N,&M); //row
+
+    int row=N, col=M;
+
+    int sizeMatrix=N*M;
+    // Host copies of the variables
+    int A[sizeMatrix], B[sizeMatrix], C[sizeMatrix];
+
+    int i, j;
+    for(i=0; i<sizeMatrix; i++)
+        scanf("%d",&A[i]);
+    for(j=0; j<sizeMatrix; j++)
+        scanf("%d",&B[j]);
+
+    // Device copies of the variables
+    int *d_a, *d_b, *d_c;
+
+    int size = sizeof(int) * sizeMatrix;
+
+    // Allocate Memories to device copies of the objects
+    cudaMalloc((void**)&d_a, size);
+    cudaMalloc((void**)&d_b, size);
+    cudaMalloc((void**)&d_c, size);
+
+    // Copy inputs to device
+    cudaMemcpy(d_a, &A, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_b, &B, size, cudaMemcpyHostToDevice);
+
+    // Launch kernel onto the device
+    mul1<<<row, 1>>>(d_a, d_b, d_c,row,col);
+
+    // Copy the result back to the host
+    cudaMemcpy(&C, d_c, size, cudaMemcpyDeviceToHost);
+
+    printf("A:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", A[j]);
+    }
+    printf("\n");
+
+    printf("B:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", B[j]);
+    }
+    printf("\n");
+
+    printf("A * B:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", C[j]);
+    }
+    printf("\n");
+
+    cudaFree(d_a);
+    cudaFree(d_b);
+    cudaFree(d_c);
+
+    getchar();
+
+    return 0;
+}
+
+q3b
+
+
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+
+#include <stdio.h>
+
+__global__ void mul2 (int *A, int *B, int *C, int height, int width) {
+    int idx = blockIdx.x;
+    int sum=0;
+    for(int i=0; i<height; i++){
+        sum=0;
+        for(int j=0; j<width; j++)
+            sum+=A[idx*width+j]*B[j*width+i];
+        C[idx*width+i]=sum;
+    }
+}
+
+int main347 () {
+
+    int N, M;
+    printf("\nEnter The Value Of N and M: ");
+    scanf("%d %d",&N,&M); //row
+
+    int row=N, col=M;
+
+    int sizeMatrix=N*M;
+    // Host copies of the variables
+    int A[sizeMatrix], B[sizeMatrix], C[sizeMatrix];
+
+    int i, j;
+    for(i=0; i<sizeMatrix; i++)
+        scanf("%d",&A[i]);
+    for(j=0; j<sizeMatrix; j++)
+        scanf("%d",&B[j]);
+
+    // Device copies of the variables
+    int *d_a, *d_b, *d_c;
+
+    int size = sizeof(int) * sizeMatrix;
+
+    // Allocate Memories to device copies of the objects
+    cudaMalloc((void**)&d_a, size);
+    cudaMalloc((void**)&d_b, size);
+    cudaMalloc((void**)&d_c, size);
+
+    // Copy inputs to device
+    cudaMemcpy(d_a, &A, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_b, &B, size, cudaMemcpyHostToDevice);
+
+    // Launch kernel onto the device
+    mul2<<<row, 1>>>(d_a, d_b, d_c,row,col);
+
+    // Copy the result back to the host
+    cudaMemcpy(&C, d_c, size, cudaMemcpyDeviceToHost);
+
+    printf("A:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", A[j]);
+    }
+    printf("\n");
+
+    printf("B:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", B[j]);
+    }
+    printf("\n");
+
+    printf("A * B:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", C[j]);
+    }
+    printf("\n");
+
+    cudaFree(d_a);
+    cudaFree(d_b);
+    cudaFree(d_c);
+
+    getchar();
+
+    return 0;
+}
+
+
+q3c
+
+
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+
+#include <stdio.h>
+
+__global__ void mul3 (int *A, int *B, int *C, int height, int width) {
+    int rid = blockIdx.y;
+    int cid = threadIdx.x;
+    int sum=0;
+    for(int i=0; i<width; i++){
+            sum+=A[rid*width+i]*B[i*width+cid];
+    }
+        C[rid*width+cid]=sum;
+}
+
+int main () {
+
+    int N, M;
+    printf("\nEnter The Value Of N and M: ");
+    scanf("%d %d",&N,&M); //row
+
+    int row=N, col=M;
+
+    int sizeMatrix=N*M;
+    // Host copies of the variables
+    int A[sizeMatrix], B[sizeMatrix], C[sizeMatrix];
+
+    int i, j;
+    for(i=0; i<sizeMatrix; i++)
+        scanf("%d",&A[i]);
+    for(j=0; j<sizeMatrix; j++)
+        scanf("%d",&B[j]);
+
+    // Device copies of the variables
+    int *d_a, *d_b, *d_c;
+
+    int size = sizeof(int) * sizeMatrix;
+
+    // Allocate Memories to device copies of the objects
+    cudaMalloc((void**)&d_a, size);
+    cudaMalloc((void**)&d_b, size);
+    cudaMalloc((void**)&d_c, size);
+
+    // Copy inputs to device
+    cudaMemcpy(d_a, &A, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_b, &B, size, cudaMemcpyHostToDevice);
+
+    // Launch kernel onto the device
+    dim3 dimBlock = (row,col);
+    mul3<<<1, dimBlock>>>(d_a, d_b, d_c,row,col);
+
+    // Copy the result back to the host
+    cudaMemcpy(&C, d_c, size, cudaMemcpyDeviceToHost);
+
+    printf("A:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", A[j]);
+    }
+    printf("\n");
+
+    printf("B:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", B[j]);
+    }
+    printf("\n");
+
+    printf("A * B:\n");
+    for (j = 0; j < sizeMatrix; ++j) {
+        printf("%d\t", C[j]);
+    }
+    printf("\n");
+
+    cudaFree(d_a);
+    cudaFree(d_b);
+    cudaFree(d_c);
+
+    getchar();
+
+    return 0;
+}
+
+
+
+

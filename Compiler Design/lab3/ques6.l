@@ -10,7 +10,7 @@ int main()
 	char file[50];
 	scanf("%s",file);
 	yyin = fopen(file,"r");
-	yyout = fopen("saioutput.txt","w");
+	yyout = fopen("output.txt","w");
 	yylex();
 	return 0;
 }

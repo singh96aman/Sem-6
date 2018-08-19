@@ -387,9 +387,9 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    2,    2,    2,    2,
 
-        2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-        2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-        2,    2,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -445,8 +445,10 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "add2.l"
-#line 450 "lex.yy.c"
+#line 1 "testyyleng.l"
+#line 2 "testyyleng.l"
+	int count=0;
+#line 452 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -628,9 +630,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 1 "add2.l"
+#line 4 "testyyleng.l"
 
-#line 634 "lex.yy.c"
+#line 636 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -715,15 +717,15 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 2 "add2.l"
-printf("%c",yytext[0]-32);
+#line 5 "testyyleng.l"
+{count+=yyleng; printf("\n%s",yytext);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 3 "add2.l"
+#line 6 "testyyleng.l"
 ECHO;
 	YY_BREAK
-#line 727 "lex.yy.c"
+#line 729 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1720,13 +1722,16 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 3 "add2.l"
+#line 6 "testyyleng.l"
 
 
 int main(){
 	yylex();
+	printf("\n%d\n",count);
+	//yyleng returns the length of the matched string
 	return 0;
 }
 int yywrap(){
 	return 1;
 }
+

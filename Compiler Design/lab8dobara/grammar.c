@@ -89,11 +89,11 @@ int statement(FILE *fp1){
 			return 1;
 	}
 	//printf("\nstat %s",buf2);
-	return ;
+	return 0;
 }
 
 void statement_list(FILE *fp1){
-	if(statement(fp1)){
+	if(statement(fp1)){	
 		statement_list(fp1);
 		printf("\nHello %s",buf2);
 	}

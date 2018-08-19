@@ -13,7 +13,18 @@ int main()
 
 	char c = fgetc(f1);
 	char temp[200]; int index=0;
-	while(c!=EOF){
+
+	//Without an extra array
+	fseek(f1,-1,SEEK_END);
+	long n = ftell(f1)+1;
+	while(n){
+		c = fgetc(f1);
+		fseek(f1,-2,SEEK_CUR);
+		printf("%c",c);
+		n--;
+	}
+
+	/*while(c!=EOF){
 		temp[index++]=c;
 		//printf("%c",c);
 		c = fgetc(f1);
@@ -21,7 +32,7 @@ int main()
 	while(index!=0){
 		putc(temp[--index],f2);
 	//	printf("%c",temp[--index]);
-	}
+	}*/
 	fclose(f1);
 	fclose(f2);
 	return 0;
